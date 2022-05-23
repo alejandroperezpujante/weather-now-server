@@ -1,0 +1,6 @@
+{
+  "recommendations": [
+    // Languaje server for Deno (Required to use Deno's CLI)
+    "denoland.vscode-deno"
+  ]
+}

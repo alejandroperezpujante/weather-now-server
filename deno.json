@@ -1,0 +1,10 @@
+{
+  "tasks": {
+    "dev": "deno run --watch --allow-read --allow-env --allow-net ./src/server.ts"
+  },
+  "fmt": {
+    "files": {
+      "exclude": [".git", ".env*", ".vscode/*"]
+    }
+  }
+}
