@@ -1,4 +1,10 @@
-import { serve } from "./deps.ts";
+import { Application, oakCors } from "./deps.ts";
 import router from "./router/index.ts";
 
-serve(async (req) => await router.route(req));
+const app = new Application();
+
+app.use(oakCors());
+app.use(router.routes());
+app.use(router.allowedMethods());
+
+await app.listen({ port: 8000 });

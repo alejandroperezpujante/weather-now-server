@@ -4,68 +4,87 @@ import { isIPv4, isIPv6 } from "../utils/index.ts";
 
 const router = new Router();
 
-// Router requires callback to be async, even if It doesn't perform any async operations.
-// deno-lint-ignore require-await
-router.get("/", async () => {
-  return new Response(
-    "Hello, welcome to the Weather Now's API. Please use the app to interact with the API.",
-    { status: 200 },
-  );
+router.get("/", (context) => {
+  context.response.body =
+    "Hello, welcome to the Weather Now's API. Please use the app to interact with the API.";
 });
 
 router.get(
-  "/getCurrentWeatherByCity",
-  async (r: Request, _p: Record<string, string>) => {
-    const city = r.url.split("city=")[1];
+  "/getWeatherByCity/:city",
+  async (context) => {
+    if (!context?.params?.city) {
+      context.response.status = 400;
+      context.response.body = "Please provide a city name.";
+      return;
+    }
+    const city = context.params.city;
 
     if (city === "" || !isNaN(Number(city))) {
       return new Response(
         "Please use a valid city.",
         { status: 400 },
-      );
-    }
+        );
+      }
 
     try {
       const weather = await getCurrentWeather(city);
-      return new Response(JSON.stringify(weather), { status: 200 });
+      context.response.body = weather;
+      return;
     } catch (error) {
-      return new Response(
-        error.message,
-        { status: 400 },
-      );
+      if (error instanceof Error) {
+        context.response.status = 400;
+        context.response.body = error.message;
+        return;
+      }
     }
   },
 );
 
 router.get(
-  "/getCurrentWeatherByCoords",
-  async (r: Request, _p: Record<string, string>) => {
-    const coords = r.url.split("coords=")[1];
+  "/getCurrentWeatherByCoords/:lat/:lon",
+  async (context) => {
 
-    if (coords === "" || coords.split(",").length !== 2) {
-      return new Response(
-        "Please use valid coordinates.",
-        { status: 400 },
-      );
+    if (!context?.params?.lat || !context?.params?.lon) {
+      context.response.status = 400;
+      context.response.body = "Please provide a latitude and longitude.";
+      return;
     }
+
+    const lat = context.params.lat;
+    const lon = context.params.lon;
+
+    if (lat === "" || lon === "" || isNaN(Number(lat)) || isNaN(Number(lon))) {
+      context.response.status = 400;
+      context.response.body = "Please provide a valid latitude and longitude.";
+      return;
+    }
+
+    const coords = `${lat},${lon}`;
 
     try {
       const weather = await getCurrentWeather(coords);
-      return new Response(JSON.stringify(weather), { status: 200 });
+      context.response.body = weather;
+      return;
     } catch (error) {
-      return new Response(
-        error.message,
-        { status: 400 },
-      );
+      if (error instanceof Error) {
+        context.response.status = 400;
+        context.response.body = error.message;
+        return;
+      }
     }
   },
 );
 
 router.get(
-  "/getCurrentWeatherByIp",
-  async (r: Request, _p: Record<string, string>) => {
-    const ip = r.url.split("ip=")[1];
+  "/getCurrentWeatherByIp/:ip",
+  async (context) => {
+    if (!context?.params?.ip) {
+      context.response.status = 400;
+      context.response.body = "Please provide an IP address.";
+      return;
+    }
 
+    const ip = context.params.ip;
     if (!isIPv4(ip) && !isIPv6(ip)) {
       return new Response(
         "Please use a valid IP.",
@@ -75,12 +94,14 @@ router.get(
 
     try {
       const weather = await getCurrentWeather(ip);
-      return new Response(JSON.stringify(weather), { status: 200 });
+      context.response.body = weather;
+      return;
     } catch (error) {
-      return new Response(
-        error.message,
-        { status: 400 },
-      );
+      if (error instanceof Error) {
+        context.response.status = 400;
+        context.response.body = error.message;
+        return;
+      }
     }
   },
 );

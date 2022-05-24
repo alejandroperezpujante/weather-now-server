@@ -1,2 +1,2 @@
-export { serve } from "https://deno.land/std@0.140.0/http/mod.ts";
-export { Router } from "https://deno.land/x/nativerouter@1.0.0/mod.ts";
+export { Application, Router } from "https://deno.land/x/oak@v10.6.0/mod.ts";
+export { oakCors } from "https://deno.land/x/cors@v1.2.2/mod.ts";
