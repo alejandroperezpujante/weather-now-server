@@ -42,7 +42,6 @@ router.get(
 router.get(
   "/getWeatherByCoords/:lat/:lon",
   async (context) => {
-
     if (!context?.params?.lat || !context?.params?.lon) {
       context.response.status = 400;
       context.response.body = "Please provide a latitude and longitude.";

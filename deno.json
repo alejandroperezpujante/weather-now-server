@@ -4,7 +4,14 @@
   },
   "fmt": {
     "files": {
-      "exclude": [".git", ".env*", ".vscode/*"]
+      "exclude": [
+        ".git",
+        ".gitiignore",
+        ".vscode/*",
+        "LICENSE",
+        "README.md",
+        ".editorconfig"
+      ]
     }
   }
 }
