@@ -1,7 +1,8 @@
 # Weather Now Server
 
 Welcome, this is the repo for the Weather Now server. This server is a simple
-Deno API server that will return the current weather for a given city, coords or IP address.
+Deno API server that returns the current weather for a given city, coords or
+IP address.
 
 ## Installation
 
