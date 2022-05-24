@@ -20,11 +20,10 @@ router.get(
     const city = context.params.city;
 
     if (city === "" || !isNaN(Number(city))) {
-      return new Response(
-        "Please use a valid city.",
-        { status: 400 },
-        );
-      }
+      context.response.status = 400;
+      context.response.body = "Please provide a valid city name.";
+      return;
+    }
 
     try {
       const weather = await getCurrentWeather(city);
@@ -41,7 +40,7 @@ router.get(
 );
 
 router.get(
-  "/getCurrentWeatherByCoords/:lat/:lon",
+  "/getWeatherByCoords/:lat/:lon",
   async (context) => {
 
     if (!context?.params?.lat || !context?.params?.lon) {
@@ -76,7 +75,7 @@ router.get(
 );
 
 router.get(
-  "/getCurrentWeatherByIp/:ip",
+  "/getWeatherByIp/:ip",
   async (context) => {
     if (!context?.params?.ip) {
       context.response.status = 400;
@@ -86,10 +85,9 @@ router.get(
 
     const ip = context.params.ip;
     if (!isIPv4(ip) && !isIPv6(ip)) {
-      return new Response(
-        "Please use a valid IP.",
-        { status: 400 },
-      );
+      context.response.status = 400;
+      context.response.body = "Please provide a valid IP address.";
+      return;
     }
 
     try {
